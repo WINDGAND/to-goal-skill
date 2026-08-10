@@ -17,15 +17,19 @@ Score every candidate skill against the current Goal (and the workflow step it w
 
 ## Discovery Order
 
-1. **Inventory local skills** the current agent can already load (user/global and project skill dirs for this runtime).
-2. **Leaderboard / known high-quality sources** when relevant ([skills.sh](https://skills.sh/)).
-3. **Cloud search**: `npx skills find <query>` with specific keywords; try alternate phrasings if needed.
+1. **Recipes first** — read [recipes.md](recipes.md); if a recipe fits, use its skill list + starter ACs as the baseline (adapt names to what is actually installed).
+2. **Inventory local skills** the current agent can already load (user/global and project skill dirs for this runtime). Coarse-filter by name/description first; read full `SKILL.md` only for shortlisted candidates. Confirm recipe skills exist; replace missing ones with local equivalents of equal/better fit.
+3. **Leaderboard / known high-quality sources** when relevant ([skills.sh](https://skills.sh/)) — **full mode only** (or user explicitly asks for cloud).
+4. **Cloud search**: `npx skills find <query>` with specific keywords; try alternate phrasings if needed — **full mode only** (or user asks).
+
+**Light mode (default):** stop after step 2 unless the user explicitly asks to search/install from the cloud.
 
 ## Local-First Policy
 
 - If a local skill is `good` or `excellent` for a step, prefer it.
 - Do **not** install cloud skills when local coverage is already adequate.
 - Avoid accumulating low-use installs.
+- Prefer a recipe’s combo when it maps cleanly; do not add extra skills for “structure”.
 
 ## When to Ask Before Installing Cloud Skills
 
@@ -58,7 +62,7 @@ When fits are close, break ties toward higher installs / stronger publisher repu
 
 ## No Adequate Skill
 
-If neither local nor cloud yields at least `good` coverage:
+If neither recipe, local, nor (when allowed) cloud yields at least `good` coverage:
 
 1. Say what is missing
 2. Build a **no-skill / few-skill** plan using general agent capabilities

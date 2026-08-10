@@ -1,123 +1,135 @@
 ---
 name: to-goal-skill
-description: Clarify a user goal and acceptance criteria, select a minimal local-first skill combo (local + skills.sh), orchestrate step-by-step execution, verify with evidence, and retry up to 2 times on gaps. Use when the user invokes /to-goal-skill or to-goal-skill, or wants multiple skills combined/orchestrated to complete a goal (e.g. skill combo, orchestrate skills, finish this goal end-to-end with skills).
+description: Use when the user invokes /to-goal-skill or to-goal-skill, or asks to combine/orchestrate multiple skills to finish a goal end-to-end (e.g. skill combo, orchestrate skills, multi-skill plan).
 license: MIT
 compatibility: Requires filesystem access to read installed skills; network + Node.js/npx for skills.sh discovery and optional installs. Portable Agent Skills (SKILL.md) format.
 metadata:
   author: WINDGAND
-  version: "1.0.0"
+  version: "1.2.0"
   attribution: "Clarify phase derived from Matt Pocock grill-me/grilling (MIT); matching adapted from vercel-labs find-skills; orchestrate/retry adapted from obra/superpowers writing-plans + executing-plans; verify adapted from obra/superpowers verification-before-completion"
 ---
 
 # To Goal Skill
 
-Meta-orchestrator: **Clarify → Match → Plan → Approve → Execute → Verify → Retry**.
+Meta-orchestrator: **Clarify → Match → Approve → Execute → Verify → Retry**.
 
-Announce at start: `Using to-goal-skill to clarify, orchestrate skills, and verify the goal.`
+Announce: `Using to-goal-skill to clarify, orchestrate skills, and verify the goal.`
 
-Talk to the user in their language. Keep this file’s instructions as the process source of truth.
+Talk in the user’s language. This file is the process source of truth.
+
+**Violating the letter of the Hard Gates is violating the spirit of this skill.**
+
+## Complexity gate (first)
+
+Before Phase 1, classify the request:
+
+| Route | When | Action |
+|-------|------|--------|
+| **Decline** | Single obvious skill; pure Q&A; user wants no-plan hotfix; orchestration only “for structure” | One line: not using to-goal-skill → use that skill / answer / act. Stop. |
+| **Continue** | Explicit invoke, or clearly needs 2+ skills / end-to-end combo | Enter pipeline below |
+
+## Modes (default: light)
+
+**Default = light.** Upgrade to **full** only if: user asks full/cloud search, or goal spans multiple sessions, or (ACs ≥3 **and** user did not ask to stay light/time-boxed).
+
+| | Light (default) | Full |
+|---|-----------------|------|
+| Clarify | ≤1 round or one-shot Goal+ACs confirm | [references/grilling.md](references/grilling.md) |
+| Match | Recipes → local only ([references/matching.md](references/matching.md)) | Recipes → local → cloud if needed |
+| Retry approve | “auto-retry this goal” → reuse approval for attempts 2–3 (installs still need consent) | New card approval each retry |
+
+Hard Gates always apply.
 
 ## Hard Gates
 
-1. **No matching/execution** until Goal + Acceptance Criteria are confirmed.
-2. **No execution** until the user approves the orchestration card.
-3. **No completion claims** without fresh verification evidence against Acceptance Criteria.
-4. **No silent cloud installs** — ask first.
-5. **Max 3 attempts** (initial + 2 retries). Then stop and report gaps.
+1. No matching/execution until Goal + Acceptance Criteria are confirmed.
+2. No business-file edits / cloud installs until card approved **and** session `approved: true`.
+3. No completion claims without fresh verification evidence.
+4. No silent cloud installs — ask first.
+5. Max 3 attempts (initial + 2 retries), then stop and report gaps.
+
+Red flags / excuse counters: [references/pressure-evals.md](references/pressure-evals.md#discipline).
+
+## Session state (portable latch)
+
+Path: `docs/to-goal/.session.md` (or user-specified). Create/update **before** showing the card; keep in sync.
+
+```markdown
+# to-goal-skill session
+active: true
+mode: light
+attempt: 1
+approved: false
+goal: ""
+## Acceptance Criteria
+- [ ] AC1: ... — verify: ...
+## Skill Combo
+- none yet
+## Notes
+- 
+```
+
+Rules:
+
+- `approved: false` → do **not** edit business files; do **not** run `npx skills add …`
+- Allowed while unapproved: chat, reads, and writes under `docs/to-goal/`
+- On user approval: set `approved: true`, then execute
+- On decline/finish: set `active: false` (or delete session)
+
+Optional Cursor hard-block: see repo `integrations/cursor/`.
 
 ## Portability
 
-Follow the open Agent Skills layout (`SKILL.md` + optional `references/`). Use the host agent’s normal tools (shell, filesystem, sub-agents if any). Do **not** assume Cursor-only, Claude-only, or Codex-only tool names.
+Use host tools; do not assume Cursor/Claude/Codex-only APIs. Local skill roots include `~/.agents/skills`, `~/.cursor/skills`, `~/.claude/skills`, `~/.codex/skills`, `~/.trae-cn/skills`, and project `.agents/skills` / `.cursor/skills` / `.claude/skills`. Coarse-filter by description; read full `SKILL.md` only for shortlist.
 
-Discover local skills from the runtime’s usual skill roots (examples: `~/.agents/skills`, `~/.cursor/skills`, `~/.claude/skills`, `~/.codex/skills`, `~/.trae-cn/skills`, project `.agents/skills` / `.cursor/skills` / `.claude/skills`). Read each candidate’s `SKILL.md` frontmatter/body before assigning it.
+## Phase 1 — Clarify
 
-## Phase 1 — Clarify (Goal + Acceptance Criteria)
+Light: draft Goal + ACs (each with verify; subjective → `needs-human-signoff`) and confirm.  
+Full: follow [references/grilling.md](references/grilling.md).
 
-Read and follow [references/grilling.md](references/grilling.md).
+## Phase 2 — Match
 
-**Derived from Matt Pocock’s grill-me / grilling (MIT).**
+Follow [references/matching.md](references/matching.md): **recipes first** ([references/recipes.md](references/recipes.md)) → local inventory → cloud only in full (or if user asks). Combo ≤5; exclude `to-goal-skill` itself.
 
-Output that must be confirmed by the user:
+## Phase 3 — Orchestration card
 
-- **Goal** — one clear success statement
-- **Acceptance Criteria** — checklist; each item has a verify method; subjective items marked `needs-human-signoff`
-
-## Phase 2 — Match Skills
-
-Read and follow [references/matching.md](references/matching.md).
-
-**Adapted from vercel-labs `find-skills`.**
-
-Produce a minimal combo (≤5 skills) mapped to upcoming workflow steps. Local-first. Ask before any cloud install.
-
-## Phase 3 — Orchestration Card (Approval Gate)
-
-**Adapted from obra/superpowers `writing-plans` (shape) + `executing-plans` (review-before-act).** Differences: steps bind to skills (not file-level coding tasks); default is chat-only unless the user asks to save/export.
-
-Present **exactly** this card and wait for approval:
+Update session file, present **exactly** this card, wait for approval:
 
 ```markdown
 ## Goal
 <one sentence>
 
 ## Acceptance Criteria
-- [ ] AC1: <criterion> — verify: <command/artifact/observation> [`needs-human-signoff` if needed]
-- [ ] AC2: ...
+- [ ] AC1: <criterion> — verify: <method> [`needs-human-signoff` if needed]
 
 ## Skill Combo
 | Skill | Source | Fit | Why |
 |-------|--------|-----|-----|
-| <name> | local / cloud (not installed) | excellent/good/partial | <one line; mention rejected alternatives if relevant> |
+| <name> | local / cloud (not installed) | excellent/good/partial | <one line> |
 
 ## Workflow
 1. <step> — Skill: <name|none> — Covers: AC# — Done when: <signal>
-2. ...
 
 ## Install requests (if any)
 - none
-- OR: request consent to run `npx skills add <owner/repo@skill> -g -y`
 
 ## Attempt
 <n> of 3
+Mode: <light|full>
+Session: docs/to-goal/.session.md
 ```
 
-If the user rejects: revise only the rejected parts and re-show the card (default). Return to Phase 1 only if they ask to re-clarify.
-
-If they approve installs: run the install, re-check the skill is loadable, then execute.
-
-### Save / export
-
-Default: keep the card in chat. If the user asks to save/export, write a markdown file where they specify (or `docs/to-goal/YYYY-MM-DD-<slug>.md` if they defer).
+Reject → revise card only. Re-clarify only if user asks. Approved installs → install, confirm loadable, then execute.  
+Save/export card only if user asks (`docs/to-goal/YYYY-MM-DD-<slug>.md` if they defer).
 
 ## Phase 4 — Execute
 
-**Adapted from obra/superpowers `executing-plans`.**
-
-For each workflow step in order:
-
-1. Announce: `Using <skill-or-general-capability> for step N: <title>`
-2. Read that skill’s `SKILL.md` (and linked refs as needed) and follow it for the step’s scope
-3. Prefer one skill covering multiple steps when the card says so — do not invent extra skills mid-flight
-4. Stop on blockers; ask rather than guess
-5. End the step with one line: result + which ACs it advanced
-
-If a step has Skill `none`, use general capabilities as planned.
+Only when `approved: true`. For each step: announce → read that skill → follow it → one-line result + ACs advanced. Skill `none` → general capability.  
+Blocked mid-flight → stop, return Phase 2→3 (same attempt until new card approved). Do not silently add skills.
 
 ## Phase 5 — Verify
 
-**Adapted from obra/superpowers `verification-before-completion`.**
-
-Iron law: **no completion claims without fresh evidence.**
-
-For each Acceptance Criterion:
-
-1. IDENTIFY the verification action
-2. RUN it (fresh)
-3. READ the full result
-4. Mark `PASS` or `FAIL` with evidence
-5. For `needs-human-signoff`, ask the user to judge; do not auto-pass
-
-Report:
+No completion claims without fresh evidence. For each AC: identify → run → read → PASS/FAIL + evidence. `needs-human-signoff` → ask user; never auto-PASS.
 
 ```markdown
 ## Verification (<attempt> of 3)
@@ -129,21 +141,14 @@ Report:
 - ...
 ```
 
-All PASS → congratulate briefly with evidence pointers; stop.
-
 ## Phase 6 — Retry
 
-On any FAIL, if attempts used < 3:
+On FAIL and attempts used under 3: keep Goal → Phase 2→3→4→5 → increment attempt. After 3: stop; summarize gaps; offer narrow / partial / switch. Do not loop.
 
-1. Keep the Goal; tighten understanding of gaps (short questions only if required)
-2. Re-run **Phase 2 → 3 → 4 → 5** targeting outstanding ACs (may change skills/steps)
-3. Increment Attempt on the new card
+## Evals
 
-After 3 failed attempts: stop. Summarize gaps, skills tried, and ask what to do next. Do not loop further.
+Before release: [references/pressure-evals.md](references/pressure-evals.md).
 
 ## Attribution
 
-- Clarify: Derived from Matt Pocock’s grill-me / grilling (MIT)
-- Match: Adapted from vercel-labs find-skills
-- Orchestrate / Retry: Adapted from obra/superpowers writing-plans + executing-plans
-- Verify: Adapted from obra/superpowers verification-before-completion
+Clarify: Matt Pocock grill-me/grilling (MIT). Match: vercel-labs find-skills. Orchestrate/Retry: obra/superpowers writing-plans + executing-plans. Verify: verification-before-completion.

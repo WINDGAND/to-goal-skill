@@ -54,11 +54,15 @@ While grilling, drive toward Acceptance Criteria that are usable in verification
 - Definition of done / quality bar
 - Evidence required for each done claim
 
+## Light mode (from parent skill)
+
+**Light is the default** in `to-goal-skill`. At most **one** frontier round, or present a drafted Goal + Acceptance Criteria for a single confirmation. Still forbid proceeding without user confirmation. Do not skip verify methods on ACs.
+
 ## Done Condition
 
 The clarify phase is done when:
 
-1. The frontier is empty (no silent assumptions left)
+1. The frontier is empty (no silent assumptions left) — or light mode confirmation is done
 2. Goal + Acceptance Criteria are written clearly
 3. The user confirms shared understanding
 

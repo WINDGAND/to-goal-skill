@@ -30,6 +30,10 @@ yarn.lock
 .env.*
 !.env.example
 
+# to-goal-skill local session latch
+docs/to-goal/.session.md
+docs/to-goal/.session.*.md
+
 # Python
 __pycache__/
 *.pyc

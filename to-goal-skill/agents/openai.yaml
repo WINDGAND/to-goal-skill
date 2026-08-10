@@ -1,5 +1,6 @@
 interface:
   display_name: "To Goal"
-  short_description: "Clarify a goal, pick skills, orchestrate, verify, retry"
+  short_description: "Orchestrate multiple skills toward a confirmed goal"
 policy:
-  allow_implicit_invocation: true
+  # Meta-orchestrator: prefer explicit invoke to avoid hijacking single-skill tasks
+  allow_implicit_invocation: false

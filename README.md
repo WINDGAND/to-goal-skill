@@ -43,6 +43,16 @@ flowchart LR
 | **验收** | 用真实证据对照每一条验收标准（不能只靠感觉） |
 | **重试** | 最多再试 2 轮；仍不行就停下来汇报缺口 |
 
+### 什么时候用 / 不用
+
+- **适合**：需要 2 个以上 skill 协作，或你明确调用 `/to-goal-skill`
+- **不适合**：单个 skill 就能做完、纯问答、或你明确要求跳过计划直接热修
+
+默认走 **light**（少问、配方+本地匹配）；只有你要云端搜索、验收项较多或明确说 full 时才升全量。  
+简单问答 / 单 skill / 热修：应直接拒绝编排，不进完整流程。
+
+可选：在 Cursor 里安装 [integrations/cursor](./integrations/cursor/README.md) hooks，未批准编排卡前硬拦业务改文件与 `npx skills add`。
+
 ## 安装
 
 需要 Node.js（用于 `npx`）。
@@ -78,10 +88,15 @@ to-goal-skill/                 ← 本仓库
 ├── README.en.md               ← English
 ├── LICENSE
 ├── .gitignore
+├── integrations/cursor/       ← 可选：Cursor 硬拦 hooks
 └── to-goal-skill/             ← 可安装的 skill 包
     ├── SKILL.md
     ├── agents/openai.yaml
     └── references/
+        ├── grilling.md
+        ├── matching.md
+        ├── recipes.md         ← 高频配方
+        └── pressure-evals.md
 ```
 
 ## 致谢
