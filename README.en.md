@@ -23,7 +23,7 @@ Works with Cursor, Claude Code, Codex, Trae, WorkBuddy, and other agents that su
 ## How it works
 
 <p align="center">
-  <img src="./assets/readme/workflow.en.gif" width="100%" alt="Workflow animation: Clarify → Match → Plan → Approve gate → Execute → Verify">
+  <img src="./assets/readme/workflow-en.gif" width="100%" alt="Workflow animation: Clarify → Match → Plan → Approve gate → Execute → Verify">
 </p>
 
 | Step | In plain words |

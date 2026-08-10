@@ -23,7 +23,7 @@
 ## 它怎么工作
 
 <p align="center">
-  <img src="./assets/readme/workflow.zh.gif" width="100%" alt="工作流动图：澄清 → 匹配 → 计划 → 批准闸门 → 执行 → 验收">
+  <img src="./assets/readme/workflow-zh.gif" width="100%" alt="工作流动图：澄清 → 匹配 → 计划 → 批准闸门 → 执行 → 验收">
 </p>
 
 | 步骤 | 说明 |
