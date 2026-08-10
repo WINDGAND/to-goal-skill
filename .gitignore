@@ -34,7 +34,7 @@ yarn.lock
 docs/to-goal/.session.md
 docs/to-goal/.session.*.md
 
-# skill-creator eval workspaces (generated; keep evals/evals.json in the skill)
+# skill-creator / local eval workspaces (generated; not shipped with the skill)
 to-goal-skill-workspace/
 
 # Python
