@@ -48,10 +48,7 @@ flowchart LR
 - **Use** when you need 2+ skills working together, or you explicitly invoke `/to-goal-skill`
 - **Skip** for single-skill jobs, pure Q&A, or when you explicitly want a no-plan hotfix
 
-**Light is the default** (short clarify, recipes + local match). Upgrade to full for cloud search, many ACs, or when you ask for full.  
-Pure Q&A / single-skill / hotfix: the skill should decline orchestration instead of forcing the pipeline.
-
-Optional: install [integrations/cursor](./integrations/cursor/README.md) hooks so Cursor hard-blocks business edits and `npx skills add` until the orchestration card is approved.
+**Light is the default** (short clarify, recipes + local match). Upgrade to full for cloud search or when you ask for full.
 
 ## Install
 
@@ -83,20 +80,15 @@ Then follow the prompts: confirm the goal → review the plan → approve → le
 ## Repository layout
 
 ```text
-to-goal-skill/                 ← this repo
-├── README.md                  ← Chinese (default)
-├── README.en.md               ← English
+to-goal-skill/
+├── README.md / README.en.md
 ├── LICENSE
-├── .gitignore
-├── integrations/cursor/       ← optional Cursor hard-gate hooks
-└── to-goal-skill/             ← the installable skill package
+└── to-goal-skill/          ← installable skill package
     ├── SKILL.md
-    ├── agents/openai.yaml
+    ├── agents/openai.yaml  ← optional host metadata
     └── references/
-        ├── grilling.md
-        ├── matching.md
-        ├── recipes.md         ← common combos
-        └── pressure-evals.md
+        ├── grilling.md     ← full clarify
+        └── matching.md     ← match + recipes
 ```
 
 ## Acknowledgments

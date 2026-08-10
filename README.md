@@ -48,10 +48,7 @@ flowchart LR
 - **适合**：需要 2 个以上 skill 协作，或你明确调用 `/to-goal-skill`
 - **不适合**：单个 skill 就能做完、纯问答、或你明确要求跳过计划直接热修
 
-默认走 **light**（少问、配方+本地匹配）；只有你要云端搜索、验收项较多或明确说 full 时才升全量。  
-简单问答 / 单 skill / 热修：应直接拒绝编排，不进完整流程。
-
-可选：在 Cursor 里安装 [integrations/cursor](./integrations/cursor/README.md) hooks，未批准编排卡前硬拦业务改文件与 `npx skills add`。
+默认走 **light**（少问、配方+本地匹配）；需要云端搜索或你明确说 full 时再升全量。
 
 ## 安装
 
@@ -83,20 +80,15 @@ npx skills add WINDGAND/to-goal-skill@to-goal-skill -g -a '*' -y
 ## 仓库结构
 
 ```text
-to-goal-skill/                 ← 本仓库
-├── README.md                  ← 默认中文
-├── README.en.md               ← English
+to-goal-skill/
+├── README.md / README.en.md
 ├── LICENSE
-├── .gitignore
-├── integrations/cursor/       ← 可选：Cursor 硬拦 hooks
-└── to-goal-skill/             ← 可安装的 skill 包
+└── to-goal-skill/          ← 可安装的 skill 包
     ├── SKILL.md
-    ├── agents/openai.yaml
+    ├── agents/openai.yaml  ← 可选宿主元数据
     └── references/
-        ├── grilling.md
-        ├── matching.md
-        ├── recipes.md         ← 高频配方
-        └── pressure-evals.md
+        ├── grilling.md     ← 全量澄清
+        └── matching.md     ← 匹配 + 配方
 ```
 
 ## 致谢

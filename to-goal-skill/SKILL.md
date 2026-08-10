@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires filesystem access to read installed skills; network + Node.js/npx for skills.sh discovery and optional installs. Portable Agent Skills (SKILL.md) format.
 metadata:
   author: WINDGAND
-  version: "1.2.0"
+  version: "1.2.1"
   attribution: "Clarify phase derived from Matt Pocock grill-me/grilling (MIT); matching adapted from vercel-labs find-skills; orchestrate/retry adapted from obra/superpowers writing-plans + executing-plans; verify adapted from obra/superpowers verification-before-completion"
 ---
 
@@ -21,11 +21,9 @@ Talk in the user’s language. This file is the process source of truth.
 
 ## Complexity gate (first)
 
-Before Phase 1, classify the request:
-
 | Route | When | Action |
 |-------|------|--------|
-| **Decline** | Single obvious skill; pure Q&A; user wants no-plan hotfix; orchestration only “for structure” | One line: not using to-goal-skill → use that skill / answer / act. Stop. |
+| **Decline** | Single obvious skill; pure Q&A; no-plan hotfix; orchestration only “for structure” | One line: skip to-goal-skill → use that skill / answer / act. Stop. |
 | **Continue** | Explicit invoke, or clearly needs 2+ skills / end-to-end combo | Enter pipeline below |
 
 ## Modes (default: light)
@@ -35,7 +33,7 @@ Before Phase 1, classify the request:
 | | Light (default) | Full |
 |---|-----------------|------|
 | Clarify | ≤1 round or one-shot Goal+ACs confirm | [references/grilling.md](references/grilling.md) |
-| Match | Recipes → local only ([references/matching.md](references/matching.md)) | Recipes → local → cloud if needed |
+| Match | Recipes → local ([references/matching.md](references/matching.md)) | Recipes → local → cloud if needed |
 | Retry approve | “auto-retry this goal” → reuse approval for attempts 2–3 (installs still need consent) | New card approval each retry |
 
 Hard Gates always apply.
@@ -48,11 +46,18 @@ Hard Gates always apply.
 4. No silent cloud installs — ask first.
 5. Max 3 attempts (initial + 2 retries), then stop and report gaps.
 
-Red flags / excuse counters: [references/pressure-evals.md](references/pressure-evals.md#discipline).
+**Red flags — STOP:** skip clarify; edit before approval; claim done without verify; silent `npx skills add`; auto-PASS `needs-human-signoff`; loop past 3 attempts; force pipeline on a Decline-route task.
 
-## Session state (portable latch)
+| Excuse | Reality |
+|--------|---------|
+| "User is in a hurry" | Stay **light**; still confirm Goal+ACs and get card approval |
+| "I'll verify after done" | Evidence first, then completion claims |
+| "Looks fine to me" | `needs-human-signoff` → ask the user |
+| "Orchestration keeps a small task tidy" | **Decline**; use the direct skill |
 
-Path: `docs/to-goal/.session.md` (or user-specified). Create/update **before** showing the card; keep in sync.
+## Session state
+
+Path: `docs/to-goal/.session.md` (or user-specified). Create/update **before** showing the card.
 
 ```markdown
 # to-goal-skill session
@@ -65,22 +70,15 @@ goal: ""
 - [ ] AC1: ... — verify: ...
 ## Skill Combo
 - none yet
-## Notes
-- 
 ```
 
-Rules:
-
-- `approved: false` → do **not** edit business files; do **not** run `npx skills add …`
-- Allowed while unapproved: chat, reads, and writes under `docs/to-goal/`
-- On user approval: set `approved: true`, then execute
-- On decline/finish: set `active: false` (or delete session)
-
-Optional Cursor hard-block: see repo `integrations/cursor/`.
+- `approved: false` → no business-file edits; no `npx skills add`
+- Allowed while unapproved: chat, reads, writes under `docs/to-goal/`
+- On approval → `approved: true` then execute; on finish/decline → `active: false`
 
 ## Portability
 
-Use host tools; do not assume Cursor/Claude/Codex-only APIs. Local skill roots include `~/.agents/skills`, `~/.cursor/skills`, `~/.claude/skills`, `~/.codex/skills`, `~/.trae-cn/skills`, and project `.agents/skills` / `.cursor/skills` / `.claude/skills`. Coarse-filter by description; read full `SKILL.md` only for shortlist.
+Use host tools; do not assume Cursor/Claude/Codex-only APIs. Skill roots include `~/.agents/skills`, `~/.cursor/skills`, `~/.claude/skills`, `~/.codex/skills`, `~/.trae-cn/skills`, and project `.agents/skills` / `.cursor/skills` / `.claude/skills`. Coarse-filter by description; read full `SKILL.md` only for shortlist.
 
 ## Phase 1 — Clarify
 
@@ -89,7 +87,7 @@ Full: follow [references/grilling.md](references/grilling.md).
 
 ## Phase 2 — Match
 
-Follow [references/matching.md](references/matching.md): **recipes first** ([references/recipes.md](references/recipes.md)) → local inventory → cloud only in full (or if user asks). Combo ≤5; exclude `to-goal-skill` itself.
+Follow [references/matching.md](references/matching.md): recipes → local → cloud only in full (or if user asks). Combo ≤5; exclude `to-goal-skill` itself.
 
 ## Phase 3 — Orchestration card
 
@@ -120,12 +118,12 @@ Session: docs/to-goal/.session.md
 ```
 
 Reject → revise card only. Re-clarify only if user asks. Approved installs → install, confirm loadable, then execute.  
-Save/export card only if user asks (`docs/to-goal/YYYY-MM-DD-<slug>.md` if they defer).
+Save/export only if user asks (`docs/to-goal/YYYY-MM-DD-<slug>.md` if they defer).
 
 ## Phase 4 — Execute
 
 Only when `approved: true`. For each step: announce → read that skill → follow it → one-line result + ACs advanced. Skill `none` → general capability.  
-Blocked mid-flight → stop, return Phase 2→3 (same attempt until new card approved). Do not silently add skills.
+Blocked mid-flight → Phase 2→3 (same attempt until new card approved). Do not silently add skills.
 
 ## Phase 5 — Verify
 
@@ -144,10 +142,6 @@ No completion claims without fresh evidence. For each AC: identify → run → r
 ## Phase 6 — Retry
 
 On FAIL and attempts used under 3: keep Goal → Phase 2→3→4→5 → increment attempt. After 3: stop; summarize gaps; offer narrow / partial / switch. Do not loop.
-
-## Evals
-
-Before release: [references/pressure-evals.md](references/pressure-evals.md).
 
 ## Attribution
 

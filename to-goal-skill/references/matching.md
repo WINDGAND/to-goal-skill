@@ -1,10 +1,8 @@
 # Skill Matching
 
-Adapted from vercel-labs `find-skills` discovery and quality checks, plus local-first rules for `to-goal-skill`.
+Adapted from vercel-labs `find-skills`, plus local-first rules and built-in recipes for `to-goal-skill`.
 
 ## Fit Tiers
-
-Score every candidate skill against the current Goal (and the workflow step it would cover):
 
 | Tier | Meaning |
 |------|---------|
@@ -17,53 +15,73 @@ Score every candidate skill against the current Goal (and the workflow step it w
 
 ## Discovery Order
 
-1. **Recipes first** — read [recipes.md](recipes.md); if a recipe fits, use its skill list + starter ACs as the baseline (adapt names to what is actually installed).
-2. **Inventory local skills** the current agent can already load (user/global and project skill dirs for this runtime). Coarse-filter by name/description first; read full `SKILL.md` only for shortlisted candidates. Confirm recipe skills exist; replace missing ones with local equivalents of equal/better fit.
-3. **Leaderboard / known high-quality sources** when relevant ([skills.sh](https://skills.sh/)) — **full mode only** (or user explicitly asks for cloud).
-4. **Cloud search**: `npx skills find <query>` with specific keywords; try alternate phrasings if needed — **full mode only** (or user asks).
+1. **Recipes first** (below): if one fits, use its skill list + starter ACs (adapt to installed names).
+2. **Local inventory**: coarse-filter by name/description; read full `SKILL.md` only for shortlist. Confirm recipe skills exist; swap missing ones for equal/better local fits.
+3. **Cloud** ([skills.sh](https://skills.sh/) / `npx skills find <query>`): **full mode only**, or when the user asks.
 
-**Light mode (default):** stop after step 2 unless the user explicitly asks to search/install from the cloud.
+**Light mode (default):** stop after step 2 unless the user asks for cloud search/install.
+
+## Recipes
+
+Pick the best fit, then verify skills exist locally (or plan install). If none fit → continue with local inventory.
+
+### R1 — Landing / promo page
+
+**When:** marketing or product landing (brand, hero, CTA).  
+**Skills:** `frontend-design` or `impeccable` / `high-end-visual-design`; optional browser/`playwright` for checks.  
+**Mode:** light if ≤2 ACs.  
+**Starter ACs:** `/` loads (HTTP 200); first viewport has brand + headline + CTA + dominant visual (screenshot); looks on-brand — `needs-human-signoff`.
+
+### R2 — Bug fix + proof
+
+**When:** reproduce, fix, prove gone.  
+**Skills:** `systematic-debugging`; `test-driven-development` when tests fit; domain/general coding for the patch.  
+**Mode:** light for a single known bug.  
+**Starter ACs:** failure reproduced (log/screenshot); fix landed (diff/tests); repro no longer fails.
+
+### R3 — PRD → issues
+
+**When:** idea/spec → PRD → implementation issues.  
+**Skills:** optional `brainstorming`; `to-prd` or `prd`; `to-issues`.  
+**Mode:** usually full.  
+**Starter ACs:** PRD at agreed path/URL; issues are vertical slices; scope/out-of-scope explicit (`needs-human-signoff` on priority).
+
+### R4 — README + i18n
+
+**When:** create/upgrade README and a second language.  
+**Skills:** `create-readme` or `crafting-effective-readmes`; `readme-i18n`.  
+**Mode:** light.  
+**Starter ACs:** primary README has install + usage; second language/switcher works; clarity — `needs-human-signoff`.
+
+### R5 — Deck or document
+
+**When:** primary output is `.pptx` / `.docx` / `.pdf`.  
+**Skills:** `pptx` / `docx` / `pdf`; optional `copy-editing` or `humanizer-zh`.  
+**Mode:** light for one artifact.  
+**Starter ACs:** file opens; required sections present; audience-ready — `needs-human-signoff`.
 
 ## Local-First Policy
 
-- If a local skill is `good` or `excellent` for a step, prefer it.
-- Do **not** install cloud skills when local coverage is already adequate.
-- Avoid accumulating low-use installs.
-- Prefer a recipe’s combo when it maps cleanly; do not add extra skills for “structure”.
+- Prefer local `good` / `excellent` fits; do not install when local coverage is adequate.
+- Prefer a recipe combo when it maps cleanly; do not add skills for “structure”.
+- Avoid low-use installs.
 
 ## When to Ask Before Installing Cloud Skills
 
-Ask the user for consent to install **only if all** are true:
+Ask only if **all** are true:
 
-1. Best local fit is missing, `poor`, or at least **one tier below** the best cloud candidate
-2. The cloud candidate is **high-reputation** (see below)
-3. Installing would materially improve the plan (not a cosmetic upgrade)
+1. Best local fit is missing, `poor`, or at least one tier below the best cloud candidate  
+2. Cloud candidate is high-reputation (installs ≥ 1K, or trusted publisher `anthropics` / `vercel-labs` / `microsoft` / `mattpocock` / `obra` / equivalent, or repo stars ≥ 1K)  
+3. Install would materially improve the plan  
 
-Never install cloud skills silently.
-
-## High-Reputation Bar (Cloud)
-
-Treat a cloud skill as high-reputation if **any** of:
-
-- Installs ≥ 1K, or
-- Trusted publisher (`anthropics`, `vercel-labs`, `microsoft`, `mattpocock`, `obra`, or equally well-known official orgs), or
-- Source repo stars ≥ 1K
-
-**Hard caution:** installs < 100 → do not recommend unless the user explicitly wants an obscure skill.
-
-When fits are close, break ties toward higher installs / stronger publisher reputation.
+Never install silently. Installs under 100 → do not recommend unless the user asks for that obscure skill.
 
 ## Combo Rules
 
-- Max **5** skills per attempt; prefer fewer.
-- If one skill covers steps 1–3 well, assign that one skill to those steps — do not add extra skills for "structure".
-- Prefer non-overlapping responsibilities.
-- Exclude `to-goal-skill` itself from the combo (it is the orchestrator).
+- Max **5** skills; prefer fewer; non-overlapping roles.
+- One skill may cover multiple steps.
+- Exclude `to-goal-skill` itself from the combo.
 
 ## No Adequate Skill
 
-If neither recipe, local, nor (when allowed) cloud yields at least `good` coverage:
-
-1. Say what is missing
-2. Build a **no-skill / few-skill** plan using general agent capabilities
-3. Still present the approval card before acting
+If recipe + local (+ cloud when allowed) lack at least `good` coverage: say what is missing, build a no-skill / few-skill plan, still present the approval card before acting.
