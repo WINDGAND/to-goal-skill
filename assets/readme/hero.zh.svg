@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">to-goal-skill</title>
+  <desc id="desc">为目标挑选 skill 组合并按计划执行验收</desc>
+  <rect width="1200" height="360" fill="#0E0E0E"/>
+  <text x="1180" y="300" text-anchor="end" fill="#2A2A2A" font-size="160" font-family="Georgia, Times New Roman, serif" font-weight="700" opacity="0.9">6</text>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Microsoft YaHei, sans-serif">
+    <text x="48" y="52" fill="#A39E96" font-size="12" letter-spacing="4" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">AGENT SKILL · ORCHESTRATION</text>
+    <text x="48" y="126" fill="#F2F0EA" font-size="56" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" letter-spacing="-2">to-goal-skill</text>
+    <rect x="48" y="146" width="56" height="3" fill="#B42318"/>
+    <text x="48" y="196" fill="#F2F0EA" font-size="22">为目标挑选最合适的 skill 组合</text>
+    <text x="48" y="232" fill="#A39E96" font-size="20">先批准，再执行；用证据验收</text>
+    <text x="48" y="300" fill="#6F6A63" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">hard gates · light default · evidence first</text>
+    <text x="48" y="326" fill="#6F6A63" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">Clarify → Match → Approve → Run → Verify</text>
+  </g>
+
+  <line x1="740" y1="40" x2="740" y2="320" stroke="#2A2A2A" stroke-width="1"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Microsoft YaHei, sans-serif">
+    <text x="780" y="52" fill="#A39E96" font-size="11" letter-spacing="3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">PIPELINE</text>
+      <text x="780" y="86" fill="#6F6A63" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" letter-spacing="1">01</text>
+      <text x="830" y="86" fill="#F2F0EA" font-size="20" font-weight="400">澄清</text>
+<line x1="780" y1="100" x2="1136" y2="100" stroke="#2A2A2A" stroke-width="1"/>
+      <text x="780" y="126" fill="#6F6A63" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" letter-spacing="1">02</text>
+      <text x="830" y="126" fill="#F2F0EA" font-size="20" font-weight="400">匹配</text>
+<line x1="780" y1="140" x2="1136" y2="140" stroke="#2A2A2A" stroke-width="1"/>
+      <text x="780" y="166" fill="#6F6A63" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" letter-spacing="1">03</text>
+      <text x="830" y="166" fill="#B42318" font-size="20" font-weight="700">批准</text>
+<rect x="1108" y="154" width="28" height="2" fill="#B42318"/>
+<line x1="780" y1="180" x2="1136" y2="180" stroke="#2A2A2A" stroke-width="1"/>
+      <text x="780" y="206" fill="#6F6A63" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" letter-spacing="1">04</text>
+      <text x="830" y="206" fill="#F2F0EA" font-size="20" font-weight="400">执行</text>
+<line x1="780" y1="220" x2="1136" y2="220" stroke="#2A2A2A" stroke-width="1"/>
+      <text x="780" y="246" fill="#6F6A63" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" letter-spacing="1">05</text>
+      <text x="830" y="246" fill="#F2F0EA" font-size="20" font-weight="400">验收</text>
+<line x1="780" y1="260" x2="1136" y2="260" stroke="#2A2A2A" stroke-width="1"/>
+      <text x="780" y="286" fill="#6F6A63" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" letter-spacing="1">06</text>
+      <text x="830" y="286" fill="#F2F0EA" font-size="20" font-weight="400">重试</text>
+  </g>
+</svg>

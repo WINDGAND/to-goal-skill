@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires filesystem access to read installed skills; network + Node.js/npx for skills.sh discovery and optional installs. Portable Agent Skills (SKILL.md) format.
 metadata:
   author: WINDGAND
-  version: "1.2.1"
+  version: "1.2.2"
   attribution: "Clarify phase derived from Matt Pocock grill-me/grilling (MIT); matching adapted from vercel-labs find-skills; orchestrate/retry adapted from obra/superpowers writing-plans + executing-plans; verify adapted from obra/superpowers verification-before-completion"
 ---
 
@@ -23,8 +23,8 @@ Talk in the user’s language. This file is the process source of truth.
 
 | Route | When | Action |
 |-------|------|--------|
-| **Decline** | Single obvious skill; pure Q&A; no-plan hotfix; orchestration only “for structure” | One line: skip to-goal-skill → use that skill / answer / act. Stop. |
-| **Continue** | Explicit invoke, or clearly needs 2+ skills / end-to-end combo | Enter pipeline below |
+| **Decline** | Single obvious skill; pure Q&A; no-plan hotfix; orchestration only “for structure”; **or** user says orchestrate/to-goal-skill but the job is still a tiny one-step fix | One line: skip to-goal-skill → use that skill / answer / act. Stop. Explicit invoke does **not** force Continue on a trivial task. |
+| **Continue** | Explicit invoke **and** clearly needs 2+ skills / end-to-end combo | Enter pipeline below |
 
 ## Modes (default: light)
 
@@ -34,26 +34,27 @@ Talk in the user’s language. This file is the process source of truth.
 |---|-----------------|------|
 | Clarify | ≤1 round or one-shot Goal+ACs confirm | [references/grilling.md](references/grilling.md) |
 | Match | Recipes → local ([references/matching.md](references/matching.md)) | Recipes → local → cloud if needed |
-| Retry approve | “auto-retry this goal” → reuse approval for attempts 2–3 (installs still need consent) | New card approval each retry |
+| Retry approve | “auto-retry this goal” → reuse approval for attempts 2–3 **only after** attempt-1 card was approved (installs still need consent) | New card approval each retry |
 
-Hard Gates always apply.
+Hard Gates always apply. Hurry / “just do it” never waives them.
 
 ## Hard Gates
 
 1. No matching/execution until Goal + Acceptance Criteria are confirmed.
-2. No business-file edits / cloud installs until card approved **and** session `approved: true`.
+2. No business-file edits, **no new deliverables** (code, pages, PRD/issues/docs outside `docs/to-goal/`), and no cloud installs until card approved **and** session `approved: true`.
 3. No completion claims without fresh verification evidence.
 4. No silent cloud installs — ask first.
 5. Max 3 attempts (initial + 2 retries), then stop and report gaps.
 
-**Red flags — STOP:** skip clarify; edit before approval; claim done without verify; silent `npx skills add`; auto-PASS `needs-human-signoff`; loop past 3 attempts; force pipeline on a Decline-route task.
+**Red flags — STOP:** skip clarify; edit or create deliverables before approval; claim done without verify; silent `npx skills add`; auto-PASS `needs-human-signoff`; loop past 3 attempts; force pipeline on a Decline-route task; treat “auto-retry” as skip-first-approval.
 
 | Excuse | Reality |
 |--------|---------|
-| "User is in a hurry" | Stay **light**; still confirm Goal+ACs and get card approval |
+| "User is in a hurry" / "just do it" / "don't ask" | Stay **light**; still confirm Goal+ACs and get card approval — zero deliverables before that |
+| "I agree to auto-retry" | Reuse approval for attempts **2–3** only; attempt **1** still needs the card |
 | "I'll verify after done" | Evidence first, then completion claims |
 | "Looks fine to me" | `needs-human-signoff` → ask the user |
-| "Orchestration keeps a small task tidy" | **Decline**; use the direct skill |
+| "They asked to orchestrate a typo/hotfix" | **Decline**; one-step jobs skip this skill |
 
 ## Session state
 
