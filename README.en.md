@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/readme/hero.en.svg" width="100%" alt="to-goal-skill: pick the right skills for your goal, approve the plan, verify with evidence">
+  <img src="./assets/readme/hero-en.svg" width="100%" alt="to-goal-skill: pick the right skills for your goal, approve the plan, verify with evidence">
 </p>
 
 <p align="center">

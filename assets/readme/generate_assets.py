@@ -204,7 +204,7 @@ def workflow(lang: str) -> str:
 
 
 if __name__ == "__main__":
-    write("hero.en.svg", hero("en"))
-    write("hero.zh.svg", hero("zh"))
+    write("hero-en.svg", hero("en"))
+    write("hero-zh.svg", hero("zh"))
     write("workflow.en.svg", workflow("en"))
     write("workflow.zh.svg", workflow("zh"))

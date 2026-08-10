@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/readme/hero.zh.svg" width="100%" alt="to-goal-skill：为你的目标挑选最合适的 skill 组合，先批准再执行，用证据验收">
+  <img src="./assets/readme/hero-zh.svg" width="100%" alt="to-goal-skill：为你的目标挑选最合适的 skill 组合，先批准再执行，用证据验收">
 </p>
 
 <p align="center">
