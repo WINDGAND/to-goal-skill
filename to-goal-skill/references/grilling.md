@@ -28,6 +28,8 @@ Ask the whole frontier in one round. Number each question and give your recommen
 ➡️ <your recommended answer>
 ```
 
+For subjective questions, make the options span genuinely different directions (脆 vs 软, fast vs slow), label your recommendation as a guess, and always leave a "都不对 / none of these" exit — a leading recommendation on a taste question is how guessed goals sneak back in.
+
 A question that depends on another still-open question belongs in a *later* round.
 
 ## Facts vs Decisions
@@ -45,6 +47,7 @@ While grilling, drive toward Acceptance Criteria that are usable in verification
 - Each criterion must include **how to verify**.
 - Vague praise ("better", "nicer", "about right") is not allowed unless marked `needs-human-signoff`.
 - Subjective criteria are allowed only when labeled `needs-human-signoff` (human judges at verify time).
+- For subjective wants, pair an objective proxy (duration, fps, layout shift) with the human signoff instead of leaving "user looks at it" as the only check.
 
 ### Useful frontier themes (adapt as needed)
 
@@ -56,14 +59,14 @@ While grilling, drive toward Acceptance Criteria that are usable in verification
 
 ## Light mode (from parent skill)
 
-**Light is the default** in `to-goal-skill`. At most **one** frontier round, or present a drafted Goal + Acceptance Criteria for a single confirmation. Still forbid proceeding without user confirmation. Do not skip verify methods on ACs.
+**Light is the default** in `to-goal-skill`; the step-by-step protocol (vagueness test, question round, read-back) lives in SKILL.md Phase 1 — this file governs **full** mode. Light adds two relaxations only: at most one frontier round, and already-specific requests may use one-shot draft + confirm with assumptions marked. Never proceed without user confirmation; never skip verify methods; subjective ACs quote the user's stated expectation plus `needs-human-signoff`.
 
 ## Done Condition
 
 The clarify phase is done when:
 
-1. The frontier is empty (no silent assumptions left) — or light mode confirmation is done
+1. The frontier is empty (no silent assumptions left) — for subjective requests this means the user has described, in their own words, what is wrong now and what effect they want; for already-specific requests, light mode confirmation is done
 2. Goal + Acceptance Criteria are written clearly
-3. The user confirms shared understanding
+3. The user confirms shared understanding — an explicit yes to the read-back paraphrase
 
 Then continue to skill matching inside `to-goal-skill`.
