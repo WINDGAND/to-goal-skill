@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires filesystem access to read installed skills; network + Node.js/npx for skills.sh discovery and optional installs. Portable Agent Skills (SKILL.md) format.
 metadata:
   author: WINDGAND
-  version: "1.3.1"
+  version: "1.3.2"
   attribution: "Clarify phase derived from Matt Pocock grill-me/grilling (MIT); matching adapted from vercel-labs find-skills; orchestrate/retry adapted from obra/superpowers writing-plans + executing-plans; verify adapted from obra/superpowers verification-before-completion"
 ---
 
@@ -30,7 +30,7 @@ Scope can sharpen mid-clarify: if answers shrink the job to a one-step fix, de-e
 
 ## Modes (default: light)
 
-**Default = light.** Upgrade to **full** only if: user asks full/cloud search, or goal spans multiple sessions, or (ACs ≥3 **and** user did not ask to stay light/time-boxed).
+**Default = light.** Upgrade to **full** only if: user asks full/cloud search, or goal spans multiple sessions, or (ACs ≥3 **and** user did not ask to stay light/time-boxed). This table is the only upgrade authority — recipe Mode fields are advisory, and only user-confirmed ACs count toward the ACs ≥3 trigger.
 
 | | Light (default) | Full |
 |---|-----------------|------|
@@ -80,6 +80,7 @@ goal: ""
 - `approved: false` → no business-file edits; no `npx skills add`
 - Allowed while unapproved: chat, reads, writes under `docs/to-goal/`
 - On approval → `approved: true` then execute; on finish/decline → `active: false`
+- After Match, record the shortlist + rejection reasons in the session file — Retry reuses it
 
 ## Portability
 
@@ -134,7 +135,7 @@ Mode: <light|full>
 Session: docs/to-goal/.session.md
 ```
 
-Reject → revise card only. Re-clarify whenever understanding shifts — any direction-level correction from the user (here or mid-execution) counts as the ask. Approved installs → install, confirm loadable, then execute.  
+Reject → revise card only. Re-clarify whenever understanding shifts — any direction-level correction from the user (here or mid-execution) counts as the ask. Approved installs → install, confirm loadable **and fit ≥ the card's claim** (read its SKILL.md against the steps; misfit → Phase 2), then execute.  
 Save/export only if user asks (`docs/to-goal/YYYY-MM-DD-<slug>.md` if they defer).
 
 ## Phase 4 — Execute
