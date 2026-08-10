@@ -89,10 +89,6 @@ def hero(lang: str) -> str:
       <text x="780" y="{y}" fill="{HERO_FAINT}" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" letter-spacing="1">{num}</text>
       <text x="830" y="{y}" fill="{fill}" font-size="20" font-weight="{weight}">{label}</text>"""
         )
-        if is_gate:
-            rows.append(
-                f'<rect x="1108" y="{y - 12}" width="28" height="2" fill="{GATE}"/>'
-            )
         if i < len(stages) - 1:
             rows.append(
                 f'<line x1="780" y1="{y + 14}" x2="1136" y2="{y + 14}" stroke="{HERO_RULE}" stroke-width="1"/>'

@@ -25,7 +25,6 @@
 <line x1="780" y1="140" x2="1136" y2="140" stroke="#2A2A2A" stroke-width="1"/>
       <text x="780" y="166" fill="#6F6A63" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" letter-spacing="1">03</text>
       <text x="830" y="166" fill="#B42318" font-size="20" font-weight="700">Approve</text>
-<rect x="1108" y="154" width="28" height="2" fill="#B42318"/>
 <line x1="780" y1="180" x2="1136" y2="180" stroke="#2A2A2A" stroke-width="1"/>
       <text x="780" y="206" fill="#6F6A63" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" letter-spacing="1">04</text>
       <text x="830" y="206" fill="#F2F0EA" font-size="20" font-weight="400">Execute</text>
