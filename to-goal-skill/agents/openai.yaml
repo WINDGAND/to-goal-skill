@@ -1,0 +1,5 @@
+interface:
+  display_name: "To Goal"
+  short_description: "Clarify a goal, pick skills, orchestrate, verify, retry"
+policy:
+  allow_implicit_invocation: true

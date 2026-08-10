@@ -1,0 +1,37 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Cursor local workspace settings
+.cursor/
+
+# Logs & caches
+*.log
+.cache/
+tmp/
+temp/
+
+# Node (if added later)
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
