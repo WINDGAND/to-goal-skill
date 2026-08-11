@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires filesystem access to read installed skills; network + Node.js/npx for skills.sh discovery and optional installs. Portable Agent Skills (SKILL.md) format.
 metadata:
   author: WINDGAND
-  version: "1.3.4"
+  version: "1.3.6"
   attribution: "Clarify phase derived from Matt Pocock grill-me/grilling (MIT); matching adapted from vercel-labs find-skills; orchestrate/retry adapted from obra/superpowers writing-plans + executing-plans; verify adapted from obra/superpowers verification-before-completion"
 ---
 
@@ -155,21 +155,29 @@ End of execution: list actual changes (file + action) and reconcile them against
 
 ## Phase 5 — Verify
 
-No completion claims without fresh evidence. For each AC: identify → run → read → PASS/FAIL + evidence. `needs-human-signoff` → ask user; never auto-PASS.
+No completion claims without fresh evidence. Evidence must be reproducible — command + key output / screenshot / artifact path; adjectives don't count; all of it produced after this attempt's last edit. For each AC: identify → run → read → PASS / FAIL / BLOCKED + evidence (BLOCKED = evidence unobtainable → Outstanding gaps, never counts as done). Each FAIL carries a one-line cause (direction / execution / environment) so Retry switches route instead of re-colliding. `needs-human-signoff` → stage the check (URL / file / before-after screenshot or recording) and ask a specific verdict question; never auto-PASS; record the outcome in the session file. Plus one scope-adjacent regression check: per touched area, one neighboring behavior still works (or N/A + why).
 
 ```markdown
 ## Verification (<attempt> of 3)
 | AC | Result | Evidence |
 |----|--------|----------|
-| AC1 | PASS/FAIL | <short evidence> |
+| AC1 | PASS/FAIL/BLOCKED | <command + key output / screenshot / path> |
+
+## Scope reconciliation
+match / deviates: <diff>
+
+## Needs your signoff (if any)
+- AC#: <staged check> — <specific verdict question>
 
 ## Outstanding gaps
-- ...
+- <gap> — next: Retry / user-waived / dropped
 ```
 
 ## Phase 6 — Retry
 
-On FAIL and attempts used under 3: keep Goal → Phase 2→3→4→5 → increment attempt. After 3: stop; summarize gaps; offer narrow / partial / switch. Do not loop.
+Route by the FAIL's cause: **direction** → back to Phase 1, re-clarify the affected ACs; **execution** → Phase 2→3→4→5, reusing the session shortlist + last cause — the new card states what changed this round ("这次换了什么"); **environment** → fix the env or ask the user, no attempt consumed. Attempts count plan-level retries only; the user redirecting mid-way = back to Clarify on a fresh sequence. Same cause twice in a row = loop: switch route or stop — never a third same-cause run. Max 3 attempts (initial + 2 retries). Auto-retry (user consented): announce "第 k 次尝试自动进行；若改 skill / AC 会重新请你批" before each.
+
+After 3, stop with a closing report: 可用状态 per change (keep / rollback) → gaps, each with its cause → options in plain words (narrow = 缩小目标保住核心 / partial = 交付已完成部分 / switch = 换方向重来) + your recommendation. Set `active: false` unless the user picks one.
 
 ## Attribution
 
