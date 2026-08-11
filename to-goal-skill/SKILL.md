@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires filesystem access to read installed skills; network + Node.js/npx for skills.sh discovery and optional installs. Portable Agent Skills (SKILL.md) format.
 metadata:
   author: WINDGAND
-  version: "1.3.6"
+  version: "1.3.7"
   attribution: "Clarify phase derived from Matt Pocock grill-me/grilling (MIT); matching adapted from vercel-labs find-skills; orchestrate/retry adapted from obra/superpowers writing-plans + executing-plans; verify adapted from obra/superpowers verification-before-completion"
 ---
 
@@ -80,9 +80,10 @@ goal: ""
 
 - `approved: false` → no business-file edits; no `npx skills add`
 - Allowed while unapproved: chat, reads, writes under `docs/to-goal/`
-- On approval → `approved: true` then execute; on finish/decline → `active: false`
+- On approval → `approved: true` then execute
 - After Match, record the shortlist + rejection reasons in the session file — Retry reuses it
 - The card must match the session file word for word; Verify runs against the latest approved session
+- **Session cleanup (auto-delete):** when the run ends successfully (all ACs PASS / user-waived, completion claimed) **or** the pipeline is closed without continuing (Decline, user cancels, or after-3 closing report with no option picked) → **delete** the session file (and remove `docs/to-goal/` if it becomes empty). Do **not** delete while waiting on clarify / card approval / human signoff / Retry. If the user asked to export, write the export first, then delete.
 
 ## Portability
 
@@ -173,11 +174,13 @@ match / deviates: <diff>
 - <gap> — next: Retry / user-waived / dropped
 ```
 
+When every AC is resolved (PASS or user-waived) and you claim completion: run Session cleanup — delete the session file (export first if requested). Announce one line: `Session cleaned: deleted docs/to-goal/.session.md`.
+
 ## Phase 6 — Retry
 
 Route by the FAIL's cause: **direction** → back to Phase 1, re-clarify the affected ACs; **execution** → Phase 2→3→4→5, reusing the session shortlist + last cause — the new card states what changed this round ("这次换了什么"); **environment** → fix the env or ask the user, no attempt consumed. Attempts count plan-level retries only; the user redirecting mid-way = back to Clarify on a fresh sequence. Same cause twice in a row = loop: switch route or stop — never a third same-cause run. Max 3 attempts (initial + 2 retries). Auto-retry (user consented): announce "第 k 次尝试自动进行；若改 skill / AC 会重新请你批" before each.
 
-After 3, stop with a closing report: 可用状态 per change (keep / rollback) → gaps, each with its cause → options in plain words (narrow = 缩小目标保住核心 / partial = 交付已完成部分 / switch = 换方向重来) + your recommendation. Set `active: false` unless the user picks one.
+After 3, stop with a closing report: 可用状态 per change (keep / rollback) → gaps, each with its cause → options in plain words (narrow = 缩小目标保住核心 / partial = 交付已完成部分 / switch = 换方向重来) + your recommendation. If the user picks an option, keep the session and continue; otherwise run Session cleanup (delete the session file). Decline / cancel mid-pipeline → same cleanup.
 
 ## Attribution
 
