@@ -2,11 +2,11 @@
   <img src="./assets/readme/hero-zh.svg" width="100%" alt="to-goal-skill：为你的目标挑选最合适的 skill 组合，先批准再执行，用证据验收">
 </p>
 
-<p align="center">
+<div align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT"></a>
   <a href="./to-goal-skill/SKILL.md"><img src="https://img.shields.io/badge/agent-skill-111111?style=flat-square" alt="Agent Skill"></a>
   <a href="https://github.com/WINDGAND/to-goal-skill"><img src="https://img.shields.io/github/stars/WINDGAND/to-goal-skill?style=flat-square&label=stars&color=111111" alt="GitHub stars"></a>
-</p>
+</div>
 
 <!-- README-I18N:START -->
 
