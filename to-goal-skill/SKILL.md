@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires filesystem access to read installed skills; network + Node.js/npx for skills.sh discovery and optional installs. Portable Agent Skills (SKILL.md) format.
 metadata:
   author: WINDGAND
-  version: "1.3.8"
+  version: "1.4.0"
   attribution: "Clarify phase derived from Matt Pocock grill-me/grilling (MIT); matching adapted from vercel-labs find-skills; orchestrate/retry adapted from obra/superpowers writing-plans + executing-plans; verify adapted from obra/superpowers verification-before-completion"
 ---
 
@@ -24,13 +24,19 @@ Talk in the user's language. This file is the process source of truth.
 | Route | When | Action |
 |-------|------|--------|
 | **Decline** | Single obvious skill; pure Q&A; no-plan hotfix; orchestration only "for structure"; **or** user says orchestrate/to-goal-skill but the job is still a tiny one-step fix | One line: skip to-goal-skill → use that skill / answer / act. Stop. Explicit invoke does **not** force Continue on a trivial task. |
-| **Continue** | Explicit invoke **and** clearly needs 2+ skills / end-to-end combo | Enter pipeline below |
+| **Fast-track** | 2+ skills needed BUT task is well-defined, low-risk, and user wants speed over ceremony | Skip Clarify phases 4-6; go straight to Match with one-shot Goal+ACs confirm. Still requires card approval. |
+| **Continue** | Explicit invoke **and** clearly needs 2+ skills / end-to-end combo with ambiguity or high stakes | Enter full pipeline below |
 
 **Negative examples (do NOT use to-goal-skill):**
 - "翻译这个 README" → 单文件单步骤，直接做
 - "改个 typo" → 热修，直接改
 - "这个函数什么意思" → 纯问答，直接答
 - "帮我写个周报"（但用户已提供全部内容）→ 单步生成，直接写
+
+**Fast-track examples (use to-goal-skill but skip heavy Clarify):**
+- "用 React 写个待办组件" → 需求明确，直接 Match + 执行
+- "清洗这个 CSV 并给统计" → 目标明确，直接做
+- "优化这个页面视觉" → 有参考图/方向，直接执行
 
 Scope can sharpen mid-clarify: if answers shrink the job to a one-step fix, de-escalate — announce Decline and just do it.
 
@@ -117,6 +123,8 @@ Full: follow [references/grilling.md](references/grilling.md).
 
 Follow [references/matching.md](references/matching.md): recipes → local → cloud only in full (or if user asks). Combo ≤5; exclude `to-goal-skill` itself.
 
+**Technical solution exploration:** When multiple technical approaches exist (e.g., MLP vs CNN for image classification), prefer the one with better expected outcomes, not just the simplest. Document the chosen approach and why in the card.
+
 ## Phase 3 — Orchestration card
 
 Update the session file first — the card must match it word for word (the card is a rendering of the session) — then present **exactly** this card and wait for an explicit approval word (可以 / 批准 / 开干 / OK / LGTM). Ambiguous replies ("嗯", "我看看") are not approval: ask "是否批准？" and wait.
@@ -160,6 +168,8 @@ Only when `approved: true`. For each step: announce ("步骤 k/n") → read that
 A user message mid-execution pauses the pipeline — respond first, then continue / re-card. A failed step = blocked after one identical retry; never improvise around a skill's instructions. Blocked mid-flight → Phase 2→3 (same attempt until new card approved). Leaving the card's declared Scope counts as blocked — stop and re-card with the delta. Do not silently add skills.
 
 **Environment Blocked handling:** If a step fails due to missing authentication, network, or external service limits → mark as `Blocked: environment`, record the specific missing requirement, and present the user with options: (a) provide auth/token, (b) skip this step, (c) substitute with local alternative. Do not consume a retry attempt for env issues.
+
+**Alternative solution exploration:** When the primary approach is blocked (e.g., missing PDF library), actively explore alternatives before declaring Blocked. Example: "No PDF library available → trying Edge headless `--print-to-pdf` as alternative." Document the alternative approach in the session file.
 
 End of execution: list actual changes (file + action) and reconcile them against the card's Scope, line by line.
 
