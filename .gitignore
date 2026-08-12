@@ -37,6 +37,9 @@ docs/to-goal/.session.*.md
 # skill-creator / local eval workspaces (generated; not shipped with the skill)
 to-goal-skill-workspace/
 
+# local eval datasets (e.g. MNIST downloaded during T6)
+/data/
+
 # Python
 __pycache__/
 *.pyc
