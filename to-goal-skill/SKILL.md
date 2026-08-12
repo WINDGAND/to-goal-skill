@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires filesystem access to read installed skills; network + Node.js/npx for skills.sh discovery and optional installs. Portable Agent Skills (SKILL.md) format.
 metadata:
   author: WINDGAND
-  version: "1.3.7"
+  version: "1.3.8"
   attribution: "Clarify phase derived from Matt Pocock grill-me/grilling (MIT); matching adapted from vercel-labs find-skills; orchestrate/retry adapted from obra/superpowers writing-plans + executing-plans; verify adapted from obra/superpowers verification-before-completion"
 ---
 
@@ -15,7 +15,7 @@ Meta-orchestrator: **Clarify → Match → Approve → Execute → Verify → Re
 
 Announce: `Using to-goal-skill to clarify, orchestrate skills, and verify the goal.`
 
-Talk in the user’s language. This file is the process source of truth.
+Talk in the user's language. This file is the process source of truth.
 
 **Violating the letter of the Hard Gates is violating the spirit of this skill.**
 
@@ -23,8 +23,14 @@ Talk in the user’s language. This file is the process source of truth.
 
 | Route | When | Action |
 |-------|------|--------|
-| **Decline** | Single obvious skill; pure Q&A; no-plan hotfix; orchestration only “for structure”; **or** user says orchestrate/to-goal-skill but the job is still a tiny one-step fix | One line: skip to-goal-skill → use that skill / answer / act. Stop. Explicit invoke does **not** force Continue on a trivial task. |
+| **Decline** | Single obvious skill; pure Q&A; no-plan hotfix; orchestration only "for structure"; **or** user says orchestrate/to-goal-skill but the job is still a tiny one-step fix | One line: skip to-goal-skill → use that skill / answer / act. Stop. Explicit invoke does **not** force Continue on a trivial task. |
 | **Continue** | Explicit invoke **and** clearly needs 2+ skills / end-to-end combo | Enter pipeline below |
+
+**Negative examples (do NOT use to-goal-skill):**
+- "翻译这个 README" → 单文件单步骤，直接做
+- "改个 typo" → 热修，直接改
+- "这个函数什么意思" → 纯问答，直接答
+- "帮我写个周报"（但用户已提供全部内容）→ 单步生成，直接写
 
 Scope can sharpen mid-clarify: if answers shrink the job to a one-step fix, de-escalate — announce Decline and just do it.
 
@@ -36,9 +42,9 @@ Scope can sharpen mid-clarify: if answers shrink the job to a one-step fix, de-e
 |---|-----------------|------|
 | Clarify | Subjective/vague goal → **≥1 targeted question round first** (one-shot confirm forbidden); already-specific goal → one-shot Goal+ACs confirm | [references/grilling.md](references/grilling.md) |
 | Match | Recipes → local ([references/matching.md](references/matching.md)) | Recipes → local → cloud if needed |
-| Retry approve | “auto-retry this goal” → reuse approval for attempts 2–3 **only after** attempt-1 card was approved (installs still need consent); reuse void if the retry card changes skills/ACs — re-approve | New card approval each retry |
+| Retry approve | "auto-retry this goal" → reuse approval for attempts 2–3 **only after** attempt-1 card was approved (installs still need consent); reuse void if the retry card changes skills/ACs — re-approve | New card approval each retry |
 
-Hard Gates always apply. Hurry / “just do it” never waives them.
+Hard Gates always apply. Hurry / "just do it" never waives them.
 
 ## Hard Gates
 
@@ -48,14 +54,14 @@ Hard Gates always apply. Hurry / “just do it” never waives them.
 4. No silent cloud installs — ask first.
 5. Max 3 attempts (initial + 2 retries), then stop and report gaps.
 
-**Red flags — STOP:** skip clarify or the read-back paraphrase; draft Goal/ACs for a subjective/vague request without first asking what's wrong now, what effect is wanted, and how the user will judge; edit or create deliverables before approval; claim done without verify; silent `npx skills add`; auto-PASS `needs-human-signoff`; loop past 3 attempts; force pipeline on a Decline-route task; treat “auto-retry” as skip-first-approval; overrun declared Scope without re-carding; pre-claim AC progress during Execute.
+**Red flags — STOP:** skip clarify or the read-back paraphrase; draft Goal/ACs for a subjective/vague request without first asking what's wrong now, what effect is wanted, and how the user will judge; edit or create deliverables before approval; claim done without verify; silent `npx skills add`; auto-PASS `needs-human-signoff`; loop past 3 attempts; force pipeline on a Decline-route task; treat "auto-retry" as skip-first-approval; overrun declared Scope without re-carding; pre-claim AC progress during Execute.
 
 | Excuse | Reality |
 |--------|---------|
 | "User is in a hurry" / "just do it" / "don't ask" | Stay **light**; still confirm Goal+ACs and get card approval — zero deliverables before that |
 | "The need is obvious — no need to ask" | Subjective/vague is never obvious: "obvious" = guessing. Ask what's wrong / what's wanted / how they'll judge first |
 | "User said 你看着办 — my pick is confirmed" | Proceed, but flag the direction as agent's guess in the card; related ACs stay `needs-human-signoff` |
-| "User replied 嗯 / 我看看 — close enough" | Ambiguous replies are never approval — ask “是否批准？” and wait for an explicit word |
+| "User replied 嗯 / 我看看 — close enough" | Ambiguous replies are never approval — ask "是否批准？" and wait for an explicit word |
 | "I agree to auto-retry" | Reuse approval for attempts **2–3** only; attempt **1** still needs the card |
 | "I'll verify after done" | Evidence first, then completion claims |
 | "Looks fine to me" | `needs-human-signoff` → ask the user |
@@ -96,13 +102,14 @@ Use host tools; do not assume Cursor/Claude/Codex-only APIs. Skill roots include
 1. **Split intents.** Several asks in one message (e.g. 按钮触感 + 动画效果) → list them; clarify each separately, one AC set per intent.
 2. **Inspect before asking.** Gather observable facts yourself first (code, screenshot, running behavior) — never make the user describe what you can look at. Ask with facts: "现在是 scale(0.95)·100ms，你嫌太生硬还是太肉？"
 3. **Vagueness test.** If you cannot write the observable end-state **in the user's own words** (which element / what property / what direction), the request is vague — asking is mandatory, one-shot confirm forbidden. When in doubt, treat as vague. (Hints: feel/look/motion/style, "better/smoother/nicer", 手感/触感/动画/视觉/风格/体验/丝滑/好看…)
-4. **Ask one targeted round** — ≤5 numbered questions, prioritized, skippable, each with your recommended answer:
+4. **Environment pre-check.** Before asking the user to invest time in clarification, quickly assess: does this task require external services (GitHub, Vercel, cloud APIs) that may lack authentication? If yes, **attempt detection first** (e.g., `gh auth status`, `vercel whoami`) rather than assuming Blocked. Only mark as Blocked if detection confirms missing auth. Don't let the user approve a plan that will predictably fail on env issues, but also don't falsely predict failure when resources are actually available.
+5. **Ask one targeted round** — ≤5 numbered questions, prioritized, skippable, each with your recommended answer:
    - **现状** — what exactly is unsatisfying now? (which element, which moment, what feels wrong)
    - **期望** — what should it look/feel like instead? (direction, reference, "like X")
    - **验收** — how will the user judge the result? (what they will look at / try)
    Low-information answers ("都行 / 你看着办") → follow up with A/B contrast options; if the user insists you decide, proceed but flag the direction as **agent's guess** in the card and mark all related ACs `needs-human-signoff`.
-5. **Read-back before matching.** Paraphrase standalone: "我理解的是：现状痛点 X → 你想要 Y → 你会用 Z 判断。对吗？" Only on an explicit yes, draft Goal + ACs quoting the user's answers. Card approval never substitutes for this yes.
-6. **AC rules.** Every AC has a verify method. Subjective ACs: `needs-human-signoff` + embed the user's stated expectation (e.g. "按钮按压有明确下沉与回弹（用户要求：'有段落感'）") — bare "better/nicer" is never an AC; where possible, pair with an objective proxy (duration, fps, layout shift). Already-specific requests (user stated target + acceptance) may use one-shot draft + confirm, with every assumption explicitly marked.
+6. **Read-back before matching.** Paraphrase standalone: "我理解的是：现状痛点 X → 你想要 Y → 你会用 Z 判断。对吗？" Only on an explicit yes, draft Goal + ACs quoting the user's answers. Card approval never substitutes for this yes.
+7. **AC rules.** Every AC has a verify method. Subjective ACs: `needs-human-signoff` + embed the user's stated expectation (e.g. "按钮按压有明确下沉与回弹（用户要求：'有段落感'）") — bare "better/nicer" is never an AC; where possible, pair with an objective proxy (duration, fps, layout shift). Already-specific requests (user stated target + acceptance) may use one-shot draft + confirm, with every assumption explicitly marked.
 
 Full: follow [references/grilling.md](references/grilling.md).
 
@@ -112,7 +119,7 @@ Follow [references/matching.md](references/matching.md): recipes → local → c
 
 ## Phase 3 — Orchestration card
 
-Update the session file first — the card must match it word for word (the card is a rendering of the session) — then present **exactly** this card and wait for an explicit approval word (可以 / 批准 / 开干 / OK / LGTM). Ambiguous replies (“嗯”, “我看看”) are not approval: ask “是否批准？” and wait.
+Update the session file first — the card must match it word for word (the card is a rendering of the session) — then present **exactly** this card and wait for an explicit approval word (可以 / 批准 / 开干 / OK / LGTM). Ambiguous replies ("嗯", "我看看") are not approval: ask "是否批准？" and wait.
 
 ```markdown
 > N ACs (M need your signoff) · installs: K cloud · touches: X areas
@@ -135,7 +142,7 @@ In: <what's included> · Out: <explicitly not doing> · Touches: <files/areas>
 1. <step> — Skill: <name|none> — Covers: AC# — Done when: <signal>
 
 ## Install requests (if any)
-- <name> — fallback if declined: <plan>   (or “- none”)
+- <name> — fallback if declined: <plan>   (or "- none")
 
 ## Attempt
 <n> of 3 — after 3, stop and report gaps
@@ -143,7 +150,7 @@ Mode: <light|full>
 Session: docs/to-goal/.session.md
 ```
 
-Reject → revise card only; each revision carries a one-line “与上版相比” delta. Re-clarify whenever understanding shifts — any direction-level correction from the user (here or mid-execution) counts as the ask. Approved installs → install, confirm loadable **and fit ≥ the card's claim** (read its SKILL.md against the steps; misfit → Phase 2), then execute.  
+Reject → revise card only; each revision carries a one-line "与上版相比" delta. Re-clarify whenever understanding shifts — any direction-level correction from the user (here or mid-execution) counts as the ask. Approved installs → install, confirm loadable **and fit ≥ the card's claim** (read its SKILL.md against the steps; misfit → Phase 2), then execute.
 Save/export only if user asks (suggest `docs/to-goal/YYYY-MM-DD-<slug>.md`).
 
 ## Phase 4 — Execute
@@ -151,6 +158,8 @@ Save/export only if user asks (suggest `docs/to-goal/YYYY-MM-DD-<slug>.md`).
 Only when `approved: true`. For each step: announce ("步骤 k/n") → read that skill → follow it → report one line ("步骤 k/n 完成" + files touched + method used if skill `none`) and log it to the session file. Never pre-claim AC progress — AC verdicts belong to Verify. After each step, sanity-check later steps' premises; a step made moot → skip with a one-line reason (not blocked).
 
 A user message mid-execution pauses the pipeline — respond first, then continue / re-card. A failed step = blocked after one identical retry; never improvise around a skill's instructions. Blocked mid-flight → Phase 2→3 (same attempt until new card approved). Leaving the card's declared Scope counts as blocked — stop and re-card with the delta. Do not silently add skills.
+
+**Environment Blocked handling:** If a step fails due to missing authentication, network, or external service limits → mark as `Blocked: environment`, record the specific missing requirement, and present the user with options: (a) provide auth/token, (b) skip this step, (c) substitute with local alternative. Do not consume a retry attempt for env issues.
 
 End of execution: list actual changes (file + action) and reconcile them against the card's Scope, line by line.
 
